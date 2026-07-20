@@ -93,7 +93,22 @@ alert(
     alert(images.length + "枚見つかりました！");
 
 }
+const newZip = new JSZip();
 
+for (const imageName of outputImages) {
+
+    const imageFile = zip.file(imageName);
+
+    const imageData =
+        await imageFile.async("blob");
+
+    newZip.file(imageName, imageData);
+
+}
+    const blob =
+await newZip.generateAsync({
+    type: "blob"
+});
 </script>
 
 </body>
