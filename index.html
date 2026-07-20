@@ -48,27 +48,25 @@ async function convert(){
     const zip =
     await JSZip.loadAsync(file);
 
-    console.log(zip.files);
-
     const images = [];
 
-for (const name in zip.files) {
+    for (const name in zip.files) {
 
-    if (
-        name.endsWith(".png") ||
-        name.endsWith(".jpg") ||
-        name.endsWith(".jpeg")
-    ) {
+        if (
+            name.endsWith(".png") ||
+            name.endsWith(".jpg") ||
+            name.endsWith(".jpeg")
+        ) {
 
-        images.push(name);
+            images.push(name);
+
+        }
 
     }
 
-}
+    console.log(images);
 
-console.log(images);
-
-alert(images.length + "枚見つかりました！");
+    alert(images.length + "枚見つかりました！");
 
 }
 
