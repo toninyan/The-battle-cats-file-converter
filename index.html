@@ -50,7 +50,25 @@ async function convert(){
 
     console.log(zip.files);
 
-    alert("読み込み成功！");
+    const images = [];
+
+for (const name in zip.files) {
+
+    if (
+        name.endsWith(".png") ||
+        name.endsWith(".jpg") ||
+        name.endsWith(".jpeg")
+    ) {
+
+        images.push(name);
+
+    }
+
+}
+
+console.log(images);
+
+alert(images.length + "枚見つかりました！");
 
 }
 
