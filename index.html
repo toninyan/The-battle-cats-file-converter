@@ -78,7 +78,17 @@ images.sort((a, b) => {
     return numA - numB;
 
 });
-    alert(images.slice(0,10).join("\n"));
+    const outputImages = [];
+
+for (let i = 0; i < images.length; i += 2) {
+    outputImages.push(images[i]);
+}
+
+alert(
+    "元：" + images.length +
+    "枚\n変換後：" +
+    outputImages.length + "枚"
+);
 
     alert(images.length + "枚見つかりました！");
 
