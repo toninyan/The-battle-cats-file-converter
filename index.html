@@ -104,11 +104,14 @@ for (const imageName of outputImages) {
 
     newZip.file(imageName, imageData);
 
-}
-    const blob =
+}   // ← for文はここで終わる
+
+const blob =
 await newZip.generateAsync({
     type: "blob"
 });
+
+alert("ZIP完成！");
 </script>
 
 </body>
