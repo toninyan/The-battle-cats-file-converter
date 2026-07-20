@@ -1,1 +1,61 @@
+<!DOCTYPE html>
+<html lang="ja">
 
+<head>
+<meta charset="UTF-8">
+<title>Battle Cats Converter</title>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+
+</head>
+
+<body>
+
+<h2>Battle Cats Converter</h2>
+
+<input
+type="file"
+id="zipFile"
+accept=".zip">
+
+<br><br>
+
+<button id="convert">
+変換
+</button>
+
+<script>
+
+document
+.getElementById("convert")
+.onclick = convert;
+
+async function convert(){
+
+    const file =
+    document
+    .getElementById("zipFile")
+    .files[0];
+
+    if(!file){
+
+        alert("ZIPを選択してください");
+
+        return;
+
+    }
+
+    const zip =
+    await JSZip.loadAsync(file);
+
+    console.log(zip.files);
+
+    alert("読み込み成功！");
+
+}
+
+</script>
+
+</body>
+
+</html>
