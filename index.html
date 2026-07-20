@@ -2,116 +2,109 @@
 <html lang="ja">
 
 <head>
-<meta charset="UTF-8">
-<title>Battle Cats Converter</title>
+    <meta charset="UTF-8">
+    <title>Battle Cats Converter</title>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 </head>
 
 <body>
 
 <h2>Battle Cats Converter</h2>
 
-<input
-type="file"
-id="zipFile"
-accept=".zip">
+<input type="file" id="zipFile" accept=".zip">
 
 <br><br>
 
-<button id="convert">
-変換
-</button>
+<button id="convert">変換</button>
 
 <script>
 
-document
-.getElementById("convert")
-.onclick = convert;
+document.getElementById("convert").onclick = convert;
 
-async function convert(){
+async function convert() {
 
-    const file =
-    document
-    .getElementById("zipFile")
-    .files[0];
+    const file = document.getElementById("zipFile").files[0];
 
-    if(!file){
-
+    if (!file) {
         alert("ZIPを選択してください");
-
         return;
-
     }
 
-    const zip =
-    await JSZip.loadAsync(file);
+    // ZIPを読み込む
+    const zip = await JSZip.loadAsync(file);
 
+    // PNGだけ取得
     const images = [];
 
     for (const name in zip.files) {
 
-        if (
-            name.endsWith(".png") ||
-            name.endsWith(".jpg") ||
-            name.endsWith(".jpeg")
-        ) {
-
+        if (name.toLowerCase().endsWith(".png")) {
             images.push(name);
-
         }
 
     }
-images.sort((a, b) => {
 
-    const numA =
-        parseInt(
-            a.match(/\d+(?=\.[^.]+$)/)[0]
-        );
+    // 数字順に並べる
+    images.sort((a, b) => {
 
-    const numB =
-        parseInt(
-            b.match(/\d+(?=\.[^.]+$)/)[0]
-        );
+        const numA = parseInt(a.match(/\d+(?=\.[^.]+$)/)[0]);
+        const numB = parseInt(b.match(/\d+(?=\.[^.]+$)/)[0]);
 
-    return numA - numB;
+        return numA - numB;
 
-});
+    });
+
+    // 2枚に1枚残す
     const outputImages = [];
 
-for (let i = 0; i < images.length; i += 2) {
-    outputImages.push(images[i]);
+    for (let i = 0; i < images.length; i += 2) {
+        outputImages.push(images[i]);
+    }
+
+    // 新しいZIPを作る
+    const newZip = new JSZip();
+
+    for (const imageName of outputImages) {
+
+        const imageFile = zip.file(imageName);
+        const imageData = await imageFile.async("blob");
+
+        newZip.file(imageName, imageData);
+
+    }
+
+    // ZIP生成
+    const blob = await newZip.generateAsync({
+        type: "blob"
+    });
+
+    // ダウンロード
+    const url = URL.createObjectURL(blob);
+
+    const a = document.createElement("a");
+
+    a.href = url;
+    a.download = "15fps_" + file.name;
+
+    document.body.appendChild(a);
+
+    a.click();
+
+    document.body.removeChild(a);
+
+    URL.revokeObjectURL(url);
+
+    alert(
+        "変換完了！\n\n" +
+        images.length +
+        "枚 → " +
+        outputImages.length +
+        "枚"
+    );
+
 }
 
-alert(
-    "元：" + images.length +
-    "枚\n変換後：" +
-    outputImages.length + "枚"
-);
-
-    alert(images.length + "枚見つかりました！");
-
-}
-const newZip = new JSZip();
-
-for (const imageName of outputImages) {
-
-    const imageFile = zip.file(imageName);
-
-    const imageData =
-        await imageFile.async("blob");
-
-    newZip.file(imageName, imageData);
-
-}   // ← for文はここで終わる
-
-const blob =
-await newZip.generateAsync({
-    type: "blob"
-});
-
-alert("ZIP完成！");
 </script>
 
 </body>
